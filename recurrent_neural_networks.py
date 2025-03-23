@@ -14,20 +14,30 @@ def clean_logs():
     shutil.rmtree(LOG_DIR, ignore_errors=True)
 
 
-def download_and_read(urls):
-    texts = []
-    for i, url in enumerate(urls):
-        p = tf.keras.utils.get_file("ex1-{:d}.txt".format(i), url,
-            cache_dir=".")
-        text = open(p, mode="r", encoding="utf-8").read()
-        # remove byte order mark
-        text = text.replace("\ufeff", "")
-        # remove newlines
-        text = text.replace('\n', ' ')
-        text = re.sub(r'\s+', " ", text)
-        # add it to the list
-        texts.extend(text)
-    return texts
+import re
+
+def download_and_read(file_paths):
+    words = []
+
+    for path in file_paths:
+        # Read content from a pre-downloaded local file
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+
+        # Convert to lowercase for consistency
+        text = text.lower()
+
+        # Remove punctuation
+        text = re.sub(r'[^\w\s]', '', text)
+
+        # Tokenize into words
+        word_list = text.split()
+
+        words.extend(word_list)
+
+    return words
+
+
 
 
 def split_train_labels(sequence):
