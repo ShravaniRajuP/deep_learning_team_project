@@ -13,31 +13,31 @@ def clean_logs():
     shutil.rmtree(CHECKPOINT_DIR, ignore_errors=True)
     shutil.rmtree(LOG_DIR, ignore_errors=True)
 
-#1.2:Zoya
-import urllib.request
+
 import re
 
-def download_and_read(urls):
+def download_and_read(file_paths):
     words = []
 
-    for i, url in enumerate(urls):
-        # Download the file content directly from the URL
-        response = urllib.request.urlopen(url)
-        text = response.read().decode('utf-8')
+    for path in file_paths:
+        # Read content from a pre-downloaded local file
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
 
-        # Convert to lowercase for consistent word matching
+        # Convert to lowercase for consistency
         text = text.lower()
 
-        # Remove punctuation using regex
+        # Remove punctuation
         text = re.sub(r'[^\w\s]', '', text)
 
-        # Split the text into words based on whitespace
+        # Tokenize into words
         word_list = text.split()
 
-        # Add words to the overall list
         words.extend(word_list)
 
     return words
+
+
 
 
 def split_train_labels(sequence):
