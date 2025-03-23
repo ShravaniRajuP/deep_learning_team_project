@@ -13,21 +13,31 @@ def clean_logs():
     shutil.rmtree(CHECKPOINT_DIR, ignore_errors=True)
     shutil.rmtree(LOG_DIR, ignore_errors=True)
 
+#1.2:Zoya
+import urllib.request
+import re
 
 def download_and_read(urls):
-    texts = []
+    words = []
+
     for i, url in enumerate(urls):
-        p = tf.keras.utils.get_file("ex1-{:d}.txt".format(i), url,
-            cache_dir=".")
-        text = open(p, mode="r", encoding="utf-8").read()
-        # remove byte order mark
-        text = text.replace("\ufeff", "")
-        # remove newlines
-        text = text.replace('\n', ' ')
-        text = re.sub(r'\s+', " ", text)
-        # add it to the list
-        texts.extend(text)
-    return texts
+        # Download the file content directly from the URL
+        response = urllib.request.urlopen(url)
+        text = response.read().decode('utf-8')
+
+        # Convert to lowercase for consistent word matching
+        text = text.lower()
+
+        # Remove punctuation using regex
+        text = re.sub(r'[^\w\s]', '', text)
+
+        # Split the text into words based on whitespace
+        word_list = text.split()
+
+        # Add words to the overall list
+        words.extend(word_list)
+
+    return words
 
 
 def split_train_labels(sequence):
